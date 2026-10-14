@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'theme/app_theme.dart';
+import 'screens/film_list_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,14 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'LetsMovie',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark,
-      home: Scaffold(
-        appBar: AppBar(title: const Text('LetsMovie')),
-        body: const Center(child: Text('LetsMovie')),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
-      ),
+      home: const FilmListScreen(),
     );
   }
 }

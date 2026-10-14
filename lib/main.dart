@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'theme/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,11 +10,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'LetsMovie',
       debugShowCheckedModeBanner: false,
+      theme: AppTheme.dark,
       home: Scaffold(
-        body: Center(child: Text('LetsMovie')),
+        appBar: AppBar(title: const Text('LetsMovie')),
+        body: const Center(child: Text('LetsMovie')),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }

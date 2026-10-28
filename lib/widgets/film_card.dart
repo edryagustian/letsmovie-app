@@ -14,96 +14,154 @@ class FilmCard extends StatelessWidget {
     required this.onDelete,
   });
 
+  Widget _placeholder() {
+    return Container(
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Color(0xFF26303B), Color(0xFF12171C)],
+        ),
+      ),
+      child: Text(
+        film.judul.isNotEmpty ? film.judul[0].toUpperCase() : '?',
+        style: const TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          color: AppColors.green,
+        ),
+      ),
+    );
+  }
+
+  Widget _poster() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: SizedBox(
+        width: 64,
+        height: 92,
+        child: film.poster.isEmpty
+            ? _placeholder()
+            : Image.network(
+          film.poster,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _placeholder(),
+          loadingBuilder: (context, child, progress) =>
+          progress == null ? child : _placeholder(),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final selesai = film.status == FilmStatus.selesai;
-    final statusColor = selesai ? AppColors.green : AppColors.blue;
-    final statusBg =
-    selesai ? const Color(0xFF0E3B22) : const Color(0xFF10364A);
-    final syncColor = film.isSynced ? AppColors.green : AppColors.orange;
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.border),
       ),
-      child: Column(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  film.judul,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+          _poster(),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        film.judul,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: onEdit,
+                      child: const Icon(Icons.edit_outlined,
+                          size: 20, color: AppColors.muted),
+                    ),
+                    const SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: onDelete,
+                      child: const Icon(Icons.delete_outline,
+                          size: 20, color: AppColors.muted),
+                    ),
+                  ],
                 ),
-              ),
-              GestureDetector(
-                onTap: onEdit,
-                child: const Text(
-                  'Edit',
-                  style: TextStyle(
-                    color: AppColors.blue,
-                    fontWeight: FontWeight.bold,
-                  ),
+                const SizedBox(height: 4),
+                Text(
+                  '${film.tahun}  •  ${film.durasi} mnt',
+                  style: const TextStyle(color: AppColors.muted, fontSize: 13),
                 ),
-              ),
-              const SizedBox(width: 16),
-              GestureDetector(
-                onTap: onDelete,
-                child: const Text(
-                  'Hapus',
-                  style: TextStyle(
-                    color: AppColors.red,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Text(
+                  film.genre,
+                  style: const TextStyle(color: AppColors.dim, fontSize: 13),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${film.tahun}  •  ${film.genre}  •  ${film.durasi} mnt',
-            style: const TextStyle(color: AppColors.muted),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '${film.sutradara}  •  ${film.negara}',
-            style: const TextStyle(color: AppColors.muted),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                decoration: BoxDecoration(
-                  color: statusBg,
-                  borderRadius: BorderRadius.circular(14),
+                Text(
+                  '${film.sutradara}  •  ${film.negara}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: AppColors.dim, fontSize: 12),
                 ),
-                child: Text(
-                  film.status,
-                  style: TextStyle(
-                    color: statusColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: selesai ? AppColors.greenSoft : Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: selesai ? Colors.transparent : AppColors.border,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            selesai ? Icons.check_circle : Icons.schedule,
+                            size: 14,
+                            color: selesai ? AppColors.green : AppColors.muted,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            film.status,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color:
+                              selesai ? AppColors.green : AppColors.muted,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      film.isSynced
+                          ? Icons.cloud_done_outlined
+                          : Icons.cloud_off_outlined,
+                      size: 18,
+                      color: film.isSynced ? AppColors.green : AppColors.dim,
+                    ),
+                  ],
                 ),
-              ),
-              const Spacer(),
-              Icon(Icons.circle, size: 10, color: syncColor),
-              const SizedBox(width: 6),
-              Text(
-                film.isSynced ? 'Tersinkron' : 'Belum sinkron',
-                style: TextStyle(color: syncColor, fontSize: 12),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

@@ -14,6 +14,7 @@ class Film {
   final String status;
   final DateTime? tanggalTonton;
   final String catatan;
+  final String poster; // link gambar, opsional
   final bool isSynced;
   final DateTime updatedAt;
 
@@ -27,34 +28,8 @@ class Film {
     required this.status,
     this.tanggalTonton,
     this.catatan = '',
+    this.poster = '',
     this.isSynced = false,
     required this.updatedAt,
   });
-
-  Film copyWith({
-    int? tahun,
-    String? genre,
-    String? sutradara,
-    int? durasi,
-    String? negara,
-    String? status,
-    DateTime? tanggalTonton,
-    String? catatan,
-    bool? isSynced,
-    DateTime? updatedAt,
-  }) {
-    return Film(
-      judul: judul,
-      tahun: tahun ?? this.tahun,
-      genre: genre ?? this.genre,
-      sutradara: sutradara ?? this.sutradara,
-      durasi: durasi ?? this.durasi,
-      negara: negara ?? this.negara,
-      status: status ?? this.status,
-      tanggalTonton: tanggalTonton ?? this.tanggalTonton,
-      catatan: catatan ?? this.catatan,
-      isSynced: isSynced ?? this.isSynced,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
 }
